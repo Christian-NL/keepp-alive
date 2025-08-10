@@ -1,0 +1,28 @@
+name: Keep Render App Alive with Logs
+
+on:
+  schedule:
+    - cron: "*/60 * * * *"  # toutes les 60 minutes
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Ping Render app and log result
+        run: |
+          URL="https://fdkj-smart-tracking-presence-backend.onrender.com/api/v1/auth/ping"
+          LOGFILE="keepalive.log"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "$(date) | $RESPONSE" >> $LOGFILE
+          echo "Pinged $URL → HTTP $RESPONSE"
+
+      - name: Upload log file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: keepalive-logs
+          path: keepalive.log
+
