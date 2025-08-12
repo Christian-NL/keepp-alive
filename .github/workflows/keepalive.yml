@@ -2,7 +2,7 @@ name: Keep Render App Alive with Logs
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # toutes les 60 minutes
+    - cron: "*/10 * * * *"  # toutes les 60 minutes
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Ping Render app and log result
         run: |
@@ -21,7 +21,7 @@ jobs:
           echo "Pinged $URL → HTTP $RESPONSE"
 
       - name: Upload log file as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: keepalive-logs
           path: keepalive.log
